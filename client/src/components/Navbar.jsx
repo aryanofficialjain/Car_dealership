@@ -23,7 +23,7 @@ const Navbar = () => {
               {/* Basic links */}
               <li>
                 <Link to="/profile" className="text-white hover:text-gray-300">
-                  Profile
+                  User
                 </Link>
               </li>
               {/* Render "Cart" link only if user is not admin */}
@@ -61,7 +61,7 @@ const Navbar = () => {
             <>
               <li>
                 <Link to="/signup" className="text-white hover:text-gray-300">
-                  Sign Up
+                  Create An Account
                 </Link>
               </li>
               <li>
