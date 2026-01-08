@@ -105,6 +105,6 @@ io.on("connection", (socket) => {
 });
 
 // Start the HTTP server
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, "0.0.0.0", () => {
   console.log(`HTTP Server is running on port ${PORT}`);
 });

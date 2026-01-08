@@ -1,4 +1,4 @@
-FROM node:22.5.1-alpine
+FROM node:22.5.1-alpine AS build
 
 WORKDIR /app
 
@@ -8,6 +8,22 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 5173
+RUN npm run build
 
-CMD [ "npm", "run", "dev" ]
+#production stage 
+
+FROM node:22-alpine
+
+WORKDIR /app
+
+RUN npm i -g serve 
+ENV PATH="/usr/local/bin:$PATH"
+
+COPY --from=build /app/dist ./dist
+
+EXPOSE 3000
+
+CMD [ "serve", "-s", "dist", "-l",  "3000" ]
+
+
+
