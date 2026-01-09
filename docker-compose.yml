@@ -5,7 +5,9 @@ services:
     build: ./server
     container_name: carbecho-server
     ports:
-      - "4000:4000" 
+      - "4000:4000"
+    env_file:
+      - ./server/.env   
     networks:
       - fullstack-net  
     restart: unless-stopped  
