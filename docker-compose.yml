@@ -1,29 +1,49 @@
 version: "3.9"
 
-services:
-  server:
-    build: ./server
-    container_name: carbecho-server
-    ports:
-      - "4000:4000"
-    env_file:
-      - ./server/.env   
-    networks:
-      - fullstack-net  
-    restart: unless-stopped  
+networks:
+  app-net:
+    driver: bridge
 
-  client: 
+volumes:
+  mongo_data:
+
+services:
+
+  mongo:
+    image: mongo:6
+    container_name: carbecho-db
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-net
+
+  api:
+    build: ./server
+    container_name: carbecho-api
+    env_file:
+      - /opt/carbecho-secrets/server.env
+    depends_on:
+      - mongo
+    networks:
+      - app-net
+
+  client:
     build: ./client
     container_name: carbecho-client
-    ports:
-      - "5174:3000" 
-    networks:
-      - fullstack-net 
     depends_on:
-      - server   
-    restart: unless-stopped    
+      - api
+    networks:
+      - app-net
 
-
-networks:
-  fullstack-net:
-    driver: bridge
+  nginx:
+    image: nginx
+    container_name: carbecho-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - client
+      - api
+    networks:
+      - app-net
